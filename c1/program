@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+
+from sys import stdin
+import math
+
+cases = int(stdin.readline())
+
+for _ in range(cases):
+    urinals = int(stdin.readline())
+    if urinals is 1:
+        n = 1
+    if urinals % 2 == 0:
+        n = urinals/2
+    else:
+        n = urinals/2+1
+    n = math.trunc(n)
+    print(n)

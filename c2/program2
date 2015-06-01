@@ -1,0 +1,73 @@
+#!/usr/bin/python3
+
+# Please Python >= 3.4
+
+from sys import stdin, stderr
+from math import sqrt
+from functools import lru_cache
+
+# AKS {{{
+
+
+def _expand_x_1(n):
+  c = 1
+  for i in range(n // 2 + 1):
+    c = c * (n - i) // (i + 1)
+    yield c
+
+
+@lru_cache(maxsize=None)
+def is_prime(p):
+  if p == 2:
+    return True
+
+  for i in _expand_x_1(p):
+    if i % p:
+      return False
+  return True
+# }}}
+
+###
+
+
+@lru_cache(maxsize=None)
+def is_almost_prime(n):
+  if is_prime(n):
+    return False
+  for x in range(2, int(sqrt(n)) + 1):
+    if n % x == 0:
+      return is_prime(n // x)
+  return False
+###
+
+
+###
+def eratosthenes2(n):
+    primes = set()
+    multiples = set()
+    for i in range(2, n+1):
+        if i not in multiples:
+            primes.add(i)
+            multiples.update(range(i*i, n+1, i))
+    return sorted(primes)
+
+# eratosthenes2(100)
+def is_almost_prime(n, primes):
+    for x in range(4, n+1):
+        if n % x == 0:
+            return n//x in primes
+    return False
+
+###
+
+cases = int(stdin.readline())
+for _ in range(cases):
+  A, B = map(int, stdin.readline().split(' '))
+  P = 0
+  primes = eratosthenes2(B)
+  for n in range(A, B + 1):
+    print(100*n//(B+1), '%', file=stderr)
+    while max(primes) > (B+1):
+        primes.pop()
+    P += is_almost_prime(n, primes)
+  print(P)
